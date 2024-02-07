@@ -11,54 +11,28 @@ import React from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearInputs } from './../../../utils/clearInput';
-import { loginUser } from '../../../services/auth/auth';
+import { loginUser, setPasswordApi } from '../../../services/auth/auth';
 import { getUserProfile } from '../../../services/user/user';
 import { mainColor } from '../../../utils/colors';
 
-const Login = ({ navigation }: any) => {
-  const [phone, setPhone] = useState('');
+const SetPassword = ({ navigation }: any) => {
   const [password, setPassword] = useState('');
-
-  // useEffect(() => {
-  //   AsyncStorage.clear();
-  // }, [isFocused]);
+  const [password2, setPassword2] = useState('');
 
   const handleLogin = () => {
     const data = {
-      phone,
       password,
     };
-    console.log(data);
-    loginUser(data)
-      .then(async (res) => {
-        console.log(res);
-        await AsyncStorage.setItem('token', res.access)
-          .then(() => {
-            // @ts-ignore
-            // navigation.navigate('TabBar');
-            // navigation.navigate('TabBarMaster');
-            getUserProfile().then(async (res: any) => {
-              await AsyncStorage.setItem('role', res.role).then(() => {
-                // showAsyncStorage();
-                const userRole = res.role;
-                if (userRole === 'client') {
-                  navigation.navigate('TabBar');
-                } else if (userRole === 'master') {
-                  navigation.navigate('TabBarMaster');
-                }
-              });
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        clearInputs([setPhone, setPassword]);
+    if (password !== password2) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+    setPasswordApi(data)
+      .then(() => {
+        navigation.navigate('Login');
       })
       .catch((err) => {
         console.log(err);
-        console.log(data);
-
-        Alert.alert('Login Failed', 'Username or password is incorrect.');
       });
   };
 
@@ -73,22 +47,23 @@ const Login = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.heading}>Log in</Text>
+        <Text style={styles.heading}>New Password</Text>
       </View>
       <View style={styles.registerContainer}>
-        <Text style={styles.label}>Phone number</Text>
-        <TextInput
-          style={styles.input}
-          value={phone}
-          onChangeText={setPhone}
-          placeholder='Phone Number'
-          keyboardType='phone-pad'
-        />
-        <Text style={styles.label}>Password</Text>
+        <Text style={styles.label}>New Password</Text>
         <TextInput
           style={styles.input}
           value={password}
           onChangeText={setPassword}
+          placeholder='Password'
+          keyboardType='default'
+          secureTextEntry
+        />
+        <Text style={styles.label}>Confirm Password</Text>
+        <TextInput
+          style={styles.input}
+          value={password2}
+          onChangeText={setPassword2}
           placeholder='Password'
           keyboardType='default'
           secureTextEntry
@@ -99,7 +74,7 @@ const Login = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>Reset Password</Text>
         </TouchableOpacity>
       </View>
 
@@ -113,7 +88,7 @@ const Login = ({ navigation }: any) => {
   );
 };
 
-export default Login;
+export default SetPassword;
 
 const styles = StyleSheet.create({
   container: {

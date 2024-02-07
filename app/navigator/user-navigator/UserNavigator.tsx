@@ -6,6 +6,13 @@ import Register from '../../src/screens/auth/register/Register';
 import TabBar from '../../components/tab-bar/TabBar';
 import MasterDetails from '../../src/screens/master/MasterDetails';
 import Verification from '../../src/screens/auth/verification/Verification';
+import ChatList from '../../src/screens/chat/ChatList';
+import Notification from '../../src/screens/notification/Notification';
+import UserProfileEdit from '../../src/screens/user-profile/UserProfileEdit';
+import Chat from '../../src/screens/chat/Chat';
+import SavedMasters from '../../src/screens/master/MastersSaved';
+import ForgotPassword from '../../src/screens/auth/forgot-password/ForgotPassword';
+import SetPassword from '../../src/screens/auth/forgot-password/SetPassword';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +41,20 @@ const UserNavigator = () => {
         }}
       />
       <Stack.Screen
+        name='ForgotPassword'
+        component={ForgotPassword}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='SetPassword'
+        component={SetPassword}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name='TabBar'
         component={TabBar}
         options={{
@@ -41,6 +62,11 @@ const UserNavigator = () => {
         }}
       />
       <Stack.Screen name='MasterDetails' component={MasterDetails} />
+      <Stack.Screen name='ChatList' component={ChatList} />
+      <Stack.Screen name='Notification' component={Notification} />
+      <Stack.Screen name='UserEdit' component={UserProfileEdit} />
+      <Stack.Screen name='Chat' component={Chat} />
+      <Stack.Screen name='SavedMasters' component={SavedMasters} />
       {/* <Stack.Screen
         name='Welcome'
         component={Welcome}

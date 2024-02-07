@@ -5,6 +5,13 @@ import MastersCard from '../../../components/masters-card/MastersCard';
 import RenderFooter from '../../../components/render-footer/RenderFooter';
 import { getAppointments, getMasters } from '../../services/masters/masters';
 import ClientAppointmentCards from '../../../components/appointment-card/ClientAppointmentsCard';
+import {
+  blueColor,
+  grayColor,
+  greenColor,
+  redColor,
+  yellowColor,
+} from '../../utils/colors';
 
 const Appointments = ({ navigation }: any) => {
   const [doctors, setDoctors] = useState<any[]>([]);
@@ -61,6 +68,7 @@ const Appointments = ({ navigation }: any) => {
       rating={item.doctor.review}
       date={item.timestamp}
       time={item.timestamp}
+      status={item?.status ? item.status : 'No status'}
       specialty={item.categories ? item.categories : 'Massajist'}
       imageUrl={
         item.doctor.avatar ||
@@ -69,6 +77,18 @@ const Appointments = ({ navigation }: any) => {
       navigation={navigation}
       screen='MasterDetails'
       masterId={item.id}
+      icon='ellipse'
+      iconColor={
+        item.status === 'IN_PROGRESS'
+          ? grayColor
+          : item.status === 'CANCELLED'
+          ? redColor
+          : item.status === 'ONGOING'
+          ? greenColor
+          : item.status === 'COMPLETED'
+          ? blueColor
+          : yellowColor
+      }
     />
   );
 

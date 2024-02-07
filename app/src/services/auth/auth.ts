@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { BASE_URL } from '../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../utils/fetchApi';
 
 // login user with phone and password
 export const loginUser = async (data: any) => {
@@ -12,6 +13,15 @@ export const loginUser = async (data: any) => {
 // register user with phone and password
 export const registerUser = async (data: any) => {
   const response = await axios.post(`${BASE_URL}/auth/send-code`, data);
+  return response.data;
+};
+
+// forget password function api
+export const forgetPassword = async (data: any) => {
+  const response = await axios.post(
+    `${BASE_URL}/auth/send-phone-to-password`,
+    data
+  );
   return response.data;
 };
 
@@ -34,4 +44,10 @@ export const verifyUser = async (data: any) => {
     console.error('Error user:', error);
     throw error;
   }
+};
+
+//change profile password
+export const setPasswordApi = async (data: any) => {
+  const response = await api.put(`${BASE_URL}/profile`, data);
+  return response.data;
 };

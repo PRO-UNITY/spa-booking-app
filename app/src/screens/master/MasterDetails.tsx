@@ -8,25 +8,43 @@ import {
   Modal,
   Image,
 } from 'react-native';
-import { getMasterById } from '../../services/masters/masters';
+import {
+  addMasterToSaved,
+  getMasterById,
+} from '../../services/masters/masters';
 import MasterDetailCard from '../../../components/masters-card/MasterDetailCard';
 import { grayColor, mainColor } from '../../utils/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AppointmentCard from '../../../components/appointment-card/AppointmentCard';
-// import ReadMoreModal from '../../../components/ReadMoreModal'; // Import the modal component
 
 const MasterDetails = ({ route }: any) => {
   const masterId = route.params.masterId;
   const [master, setMaster] = React.useState<any>({});
-  const [isModalVisible, setIsModalVisible] = useState(false); // State to manage modal visibility
-  const [isAppointment, setIsAppointment] = useState(false); // State to manage modal visibility
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAppointment, setIsAppointment] = useState(false);
+  const [isSaved, setIsSaved] = React.useState(false);
+  const [isFavorite, setIsFavorite] = React.useState(false);
 
   useEffect(() => {
     getMasterById(masterId).then((res) => {
-      console.log(res);
       setMaster(res);
+      setIsFavorite(res.is_favorite);
     });
   }, []);
+
+  const handleMasterSave = () => {
+    const data = {
+      doctor: masterId,
+    };
+    addMasterToSaved(data)
+      .then(() => {
+        setIsSaved(true);
+        console.log('saved');
+      })
+      .catch((error) => {
+        console.error('Error saving master:', error);
+      });
+  };
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -42,94 +60,121 @@ const MasterDetails = ({ route }: any) => {
     setIsAppointment(false);
   };
 
+  console.log('hello', master.first_name);
+
+  const renderRatingStars = () => {
+    const filledStars = Math.floor(master.reviews);
+    const remainingStars = 5 - filledStars;
+    let stars = [];
+    for (let i = 0; i < filledStars; i++) {
+      stars.push(<Icon key={i} name='star' color={mainColor} size={30} />);
+    }
+    for (let j = 0; j < remainingStars; j++) {
+      stars.push(
+        <Icon
+          key={filledStars + j}
+          name='star-outline'
+          color={mainColor}
+          size={30}
+        />
+      );
+    }
+    return stars;
+  };
+
   return (
     <View style={styles.container}>
-      {master.avatar && (
-        <>
-          <ImageBackground
-            source={{ uri: master.avatar }}
-            style={styles.backgroundImage}
-          >
-            <View style={styles.infoContainer}>
-              <Text style={styles.nameText}>Name: {master.first_name}</Text>
-              <Text style={styles.categoryText}>
-                Speciality {master.categories}
-              </Text>
-              <Text style={styles.phoneText}>Phone: {master.phone}</Text>
-              <Pressable
-                style={styles.appointmentButton}
-                onPress={() => setIsAppointment(!isAppointment)}
-              >
-                <Text style={styles.readButtonText}>Appointment</Text>
-              </Pressable>
-              <Pressable style={styles.readMoreButton} onPress={toggleModal}>
-                <Text style={styles.readButtonText}>Read More...</Text>
-              </Pressable>
-            </View>
-          </ImageBackground>
-          {/* appointment modal */}
-          <Modal
-            visible={isAppointment}
-            transparent={true}
-            animationType='slide'
-            onRequestClose={toggleModal}
-          >
-            <AppointmentCard
-              masterId={masterId}
-              onClose={closeAppointmentModal}
-            />
-          </Modal>
+      <>
+        <ImageBackground
+          source={{
+            uri: master.avatar
+              ? master.avatar
+              : 'https://img.freepik.com/free-photo/handsome-young-man-with-arms-crossed-white-background_23-2148222620.jpg',
+          }}
+          style={styles.backgroundImage}
+        >
+          <View style={styles.infoContainer}>
+            <Text style={styles.nameText}>Name: {master.first_name}</Text>
+            <Text style={styles.categoryText}>
+              Speciality {master.categories}
+            </Text>
+            <Text style={styles.phoneText}>Phone: {master.phone}</Text>
+            <Pressable
+              style={styles.appointmentButton}
+              onPress={() => setIsAppointment(!isAppointment)}
+            >
+              <Text style={styles.readButtonText}>Appointment</Text>
+            </Pressable>
+            <Pressable style={styles.readMoreButton} onPress={toggleModal}>
+              <Text style={styles.readButtonText}>Read More...</Text>
+            </Pressable>
+          </View>
+        </ImageBackground>
+        {/* appointment modal */}
+        <Modal
+          visible={isAppointment}
+          transparent={true}
+          animationType='slide'
+          onRequestClose={toggleModal}
+        >
+          <AppointmentCard
+            masterId={masterId}
+            onClose={closeAppointmentModal}
+          />
+        </Modal>
 
-          {/* Modal */}
-          <Modal
-            visible={isModalVisible}
-            transparent={true}
-            animationType='slide'
-            onRequestClose={toggleModal}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <View style={styles.modalContentHeader}>
-                  {master.avatar && (
-                    <Image
-                      source={{ uri: master.avatar }}
-                      style={styles.image}
-                    />
-                  )}
-                  <View style={styles.modalContentHeaderInfo}>
-                    <Text style={styles.nameModalText}>
-                      {master.first_name}
-                    </Text>
-                    <Text style={styles.categoryModalText}>
-                      {master.categories}
-                    </Text>
-                    <Text style={styles.phoneModalText}>{master.phone}</Text>
-                  </View>
-                  <View>
-                    <Icon name='heart' color={mainColor} size={30} />
-                  </View>
-                </View>
-
-                <View style={styles.modalContentTextContainer}>
-                  <Text style={styles.modalContentText}>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Adipisci libero minus perspiciatis, officiis sapiente
-                    temporibus nobis, ullam nulla voluptate quod nam ea esse,
-                    obcaecati voluptas harum molestiae commodi laudantium
-                    numquam unde omnis. Maxime nisi illo earum veritatis tenetur
-                    repellendus, dicta quis sequi nostrum aspernatur delectus
-                    non alias? Debitis natus, et numquam sunt, quod nostrum
-                    dolores nam harum eius quasi veritatis quaerat repudiandae
+        {/* Modal */}
+        <Modal
+          visible={isModalVisible}
+          transparent={true}
+          animationType='slide'
+          onRequestClose={toggleModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalContentHeader}>
+                {master.avatar && (
+                  <Image source={{ uri: master.avatar }} style={styles.image} />
+                )}
+                <View style={styles.modalContentHeaderInfo}>
+                  <Text style={styles.nameModalText}>{master.first_name}</Text>
+                  <Text style={styles.categoryModalText}>
+                    {master.categories}
                   </Text>
+                  <Text style={styles.phoneModalText}>{master.phone}</Text>
                 </View>
-                <Pressable style={styles.closeButton} onPress={toggleModal}>
-                  <Text style={styles.closeText}>Close</Text>
+                <Pressable onPress={() => handleMasterSave()}>
+                  {/* <Icon name='heart' color={mainColor} size={30} /> */}
+                  <Icon
+                    name={isFavorite ? 'heart' : 'heart-outline'}
+                    size={24}
+                    color={mainColor}
+                  />
                 </Pressable>
               </View>
+
+              <View style={styles.modalContentTextContainer}>
+                <View style={styles.raitingContainer}>
+                  <Text style={styles.modalContentText}>Raiting: </Text>
+                  <View style={styles.raitingContainer}>
+                    {renderRatingStars()}
+                  </View>
+                </View>
+                <Text style={styles.categoryModalText}>
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Commodi error voluptatum consequatur deleniti ducimus cumque
+                  doloribus minus architecto eligendi qui laboriosam sapiente
+                  perferendis nemo, sit sunt id veritatis illum magni quod iure!
+                  Doloribus, deleniti ut recusandae id, minus itaque iure
+                </Text>
+              </View>
+              <Pressable style={styles.closeButton} onPress={toggleModal}>
+                <Text style={styles.closeText}>Close</Text>
+              </Pressable>
             </View>
-          </Modal>
-        </>
-      )}
+          </View>
+        </Modal>
+      </>
     </View>
   );
 };
@@ -155,17 +200,17 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   nameText: {
-    color: 'black',
+    color: 'red',
     fontSize: 30,
     fontWeight: 'bold',
   },
   categoryText: {
-    color: 'black',
+    color: 'red',
     fontSize: 20,
     marginTop: 2,
   },
   phoneText: {
-    color: 'black',
+    color: 'red',
     fontSize: 18,
     marginTop: 4,
   },
@@ -196,7 +241,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    flex: 0.5,
     padding: 20,
     borderRadius: 30,
     elevation: 5,
@@ -213,11 +257,11 @@ const styles = StyleSheet.create({
   nameModalText: {
     fontSize: 20,
   },
-
   categoryModalText: {
     fontSize: 16,
     color: 'gray',
     marginTop: 2,
+    marginVertical: 10,
   },
   phoneModalText: {
     fontSize: 14,
@@ -225,22 +269,27 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   modalContentTextContainer: {
-    marginTop: 8,
+    marginTop: 18,
   },
   modalContentText: {
     fontSize: 16,
+    fontWeight: 'bold',
     lineHeight: 22,
   },
   closeButton: {
     backgroundColor: mainColor,
     padding: 12,
-    paddingHorizontal: 20,
     alignItems: 'center',
-    marginTop: 10,
     borderRadius: 6,
+    marginVertical: 14,
   },
   closeText: {
     fontSize: 18,
     color: '#fff',
+  },
+  raitingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
 });

@@ -1,8 +1,10 @@
-import { Image, StyleSheet, Text, View, Platform } from 'react-native';
 import React from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { CardProps } from '../../src/types/CardProp';
 import { grayColor } from '../../src/utils/colors';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const MastersCard: React.FC<CardProps> = ({
   imageUrl,
@@ -11,14 +13,25 @@ const MastersCard: React.FC<CardProps> = ({
   navigation,
   screen,
   masterId,
+  phone,
+  rating,
+  icon,
+  iconColor,
 }) => {
   return (
     <TouchableOpacity onPress={() => navigation.navigate(screen, { masterId })}>
       <View style={styles.container}>
         {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
         <View style={styles.textContainer}>
-          <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.phoneText}>{specialty}</Text>
+          <Text style={styles.nameText}>Mr. {name}</Text>
+          <Text style={styles.phoneText}>{phone}</Text>
+
+          <View style={styles.ratingContainer}>
+            {/* @ts-ignore */}
+            <Icon name={icon} style={[styles.starIcon, { color: iconColor }]} />
+            <Text style={styles.ratingText}>{rating}</Text>
+            <Text style={styles.ratingText}>{specialty}</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -37,8 +50,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   image: {
-    width: 70,
-    height: 70,
+    width: 65,
+    height: 65,
     borderRadius: 35,
   },
   textContainer: {
@@ -53,10 +66,14 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    paddingBottom: 4,
     gap: 8,
   },
-
+  ratingText: {
+    fontSize: 14,
+    color: '#404446',
+  },
   nameText: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -67,5 +84,8 @@ const styles = StyleSheet.create({
   phoneText: {
     fontSize: 16,
     color: '#404446',
+  },
+  starIcon: {
+    fontSize: 16,
   },
 });

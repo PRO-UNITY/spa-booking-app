@@ -13,6 +13,7 @@ import Chat from '../../src/screens/chat/Chat';
 import SavedMasters from '../../src/screens/master/MastersSaved';
 import ForgotPassword from '../../src/screens/auth/forgot-password/ForgotPassword';
 import SetPassword from '../../src/screens/auth/forgot-password/SetPassword';
+import VerificationRegistration from '../../src/screens/auth/register/VerificationRegister';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,11 @@ const UserNavigator = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name='VerificationRegistration'
+        component={VerificationRegistration}
+      />
+
       <Stack.Screen
         name='Verification'
         component={Verification}

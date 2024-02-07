@@ -152,7 +152,7 @@ export default Chat;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e5e5e5',
+    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',

@@ -17,15 +17,32 @@ import MasterCalendarAppointments from '../../src/screens/master/MasterCalendarA
 import Notification from '../../src/screens/notification/Notification';
 import Chat from '../../src/screens/chat/Chat';
 import SetPassword from '../../src/screens/auth/forgot-password/SetPassword';
+import VerificationRegistration from '../../src/screens/auth/register/VerificationRegister';
 
 const Stack = createStackNavigator();
 
 const MasterNavigator = () => {
   return (
     <Stack.Navigator initialRouteName='Login'>
-      <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
+      <Stack.Screen
+        name='ForgotPassword'
+        component={ForgotPassword}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name='Verification' component={Verification} />
-      <Stack.Screen name='SetPassword' component={SetPassword} />
+      <Stack.Screen
+        name='VerificationRegistration'
+        component={VerificationRegistration}
+      />
+      <Stack.Screen
+        name='SetPassword'
+        component={SetPassword}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name='UserEdit' component={UserProfileEdit} />
       <Stack.Screen name='Chat' component={Chat} />
       <Stack.Screen name='ChatList' component={ChatList} />
@@ -65,7 +82,7 @@ const MasterNavigator = () => {
         name='Login'
         component={Login}
         options={{
-          headerShown: true,
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

@@ -23,12 +23,13 @@ const MasterDetails = ({ route }: any) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAppointment, setIsAppointment] = useState(false);
   const [isSaved, setIsSaved] = React.useState(false);
-  const [isFavorite, setIsFavorite] = React.useState(false);
 
   useEffect(() => {
     getMasterById(masterId).then((res) => {
       setMaster(res);
-      setIsFavorite(res.is_favorite);
+      console.log(res);
+
+      setIsSaved(res.is_saved);
     });
   }, []);
 
@@ -146,7 +147,7 @@ const MasterDetails = ({ route }: any) => {
                 <Pressable onPress={() => handleMasterSave()}>
                   {/* <Icon name='heart' color={mainColor} size={30} /> */}
                   <Icon
-                    name={isFavorite ? 'heart' : 'heart-outline'}
+                    name={isSaved ? 'heart' : 'heart-outline'}
                     size={24}
                     color={mainColor}
                   />

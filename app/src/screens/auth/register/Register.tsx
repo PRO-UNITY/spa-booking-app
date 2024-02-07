@@ -28,7 +28,7 @@ const Register = ({ navigation }: any) => {
     registerUser(data)
       .then(async (res) => {
         await AsyncStorage.setItem('token', res.access);
-        navigation.navigate('Verification');
+        navigation.navigate('VerificationRegistration');
       })
       .catch((err) => {
         console.log(err);

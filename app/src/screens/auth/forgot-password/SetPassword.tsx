@@ -68,11 +68,7 @@ const SetPassword = ({ navigation }: any) => {
           keyboardType='default'
           secureTextEntry
         />
-        <View style={styles.haveAccountContainer}>
-          <TouchableOpacity onPress={navigateToForgotPassword}>
-            <Text style={styles.forgotLink}>Forgot Password ?</Text>
-          </TouchableOpacity>
-        </View>
+
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Reset Password</Text>
         </TouchableOpacity>

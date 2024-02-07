@@ -70,7 +70,6 @@ const MasterAppointmentUser = ({ navigation, route }: any) => {
 
   return (
     <View style={styles.container}>
-      <Text>Master Appointment User</Text>
       {appointmentData ? (
         // @ts-ignore
         <ClientsCardInfo
@@ -135,5 +134,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#fff',
   },
 });

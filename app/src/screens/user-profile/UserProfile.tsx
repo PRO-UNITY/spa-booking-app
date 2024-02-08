@@ -12,6 +12,7 @@ import { mainColor } from '../../utils/colors';
 import ProfileListItem from '../../../components/profile-list-item/ProfileListItem';
 import { BASE_URL } from '../../utils';
 import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = ({ navigation, route }: any) => {
   const [user, setUser] = React.useState<any>({});
@@ -65,6 +66,12 @@ const Profile = ({ navigation, route }: any) => {
     },
   ];
 
+  const logOut = () => {
+    AsyncStorage.clear().then(() => {
+      navigation.navigate('Login');
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -91,6 +98,9 @@ const Profile = ({ navigation, route }: any) => {
         style={styles.editButton}
       >
         <Text style={styles.editText}>Edit Profile</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={logOut} style={styles.editButton}>
+        <Text style={styles.editText}>Log out</Text>
       </TouchableOpacity>
     </View>
   );
